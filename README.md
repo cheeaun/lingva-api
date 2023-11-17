@@ -17,8 +17,7 @@ Requires [Deno](https://deno.com/).
 
 ## API Endpoints
 
-- `GET /?source=SOURCE&target=TARGET&query=QUERY` - simpler endpoint, uses query parameters.
-- `GET /api/v1/SOURCE/TARGET/QUERY` - matches Lingva Translate's API endpoint.
+- `GET /api/v1/:SOURCE/:TARGET/:QUERY`
 
 Parameters:
 - `SOURCE` - Source language, default: `auto`.
