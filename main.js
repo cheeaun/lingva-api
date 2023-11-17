@@ -5,6 +5,21 @@ import {
   LanguageType,
 } from 'npm:lingva-scraper';
 
+// Function to wrap promise and just console.log the execution time
+// Log, using console.time, the function name and execution time for both success and error
+function timePromise(label, promise) {
+  console.time(label);
+  return promise
+    .then((result) => {
+      console.timeEnd(label);
+      return result;
+    })
+    .catch((error) => {
+      console.timeEnd(label);
+      throw error;
+    });
+}
+
 function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -48,8 +63,14 @@ Deno.serve(async (request) => {
     return jsonResponse({ error: 'Invalid language code' }, 400);
   }
 
-  const translationPromise = getTranslationText(source, target, query);
-  const infoPromise = getTranslationInfo(source, target, query);
+  const translationPromise = timePromise(
+    `getTranslationText ${source} -> ${target}: ${query.length} chars`,
+    getTranslationText(source, target, query),
+  );
+  const infoPromise = timePromise(
+    `getTranslationInfo ${source} -> ${target}: ${query.length} chars`,
+    getTranslationInfo(source, target, query),
+  );
 
   try {
     const translation = await translationPromise;
