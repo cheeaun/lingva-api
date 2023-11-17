@@ -5,8 +5,7 @@ Simple API endpoint based on [Lingva Translate](https://github.com/thedaviddelta
 - Written in [Deno](https://deno.com/).
 - Serverless, on [Deno Deploy](https://deno.com/deploy).
 - There's no front-end.
-- Not all API endpoints from Lingva Translate are implemented.
-- Uses [lingva-scraper](https://github.com/thedaviddelta/lingva-scraper).
+- Uses [Lingva Scraper](https://github.com/thedaviddelta/lingva-scraper).
 
 ## Development
 
@@ -19,9 +18,13 @@ Requires [Deno](https://deno.com/).
 
 - `GET /api/v1/:SOURCE/:TARGET/:QUERY`
 - `GET /api/v1/audio/:TARGET/:QUERY`
-- `GET /api/v1/languages/?:(SOURCE|TARGET)`
+- `GET /api/v1/languages/(source|target)?`
 
 Parameters:
 - `SOURCE` - Source language, default: `auto`.
 - `TARGET` - Target language, required.
 - `QUERY` - Text to translate, required.
+
+## License
+
+Lingva Translate ©️ [thedaviddelta](https://github.com/thedaviddelta) & contributors.
