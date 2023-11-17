@@ -57,12 +57,6 @@ app.get('/api/v1/audio/:lang/:query', async (c) => {
 app.get('/api/v1/:source/:target/:query', async (c) => {
   const { source = 'auto', target, query } = c.req.param();
 
-  // console.log({
-  //   source,
-  //   target,
-  //   query,
-  // });
-
   if (!isValidCode(source, LanguageType.SOURCE)) {
     return c.json({ error: 'Invalid source language' }, 400);
   }
