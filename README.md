@@ -15,9 +15,11 @@ Requires [Deno](https://deno.com/).
 - `deno task dev` - Run the server with watch mode, for development.
 - `deno task start` - Run the server.
 
-## API Endpoints
+## REST API Endpoints
 
 - `GET /api/v1/:SOURCE/:TARGET/:QUERY`
+- `GET /api/v1/audio/:TARGET/:QUERY`
+- `GET /api/v1/languages/?:(SOURCE|TARGET)`
 
 Parameters:
 - `SOURCE` - Source language, default: `auto`.
