@@ -34,6 +34,26 @@ app.use('*', async (c, next) => {
   ); // 1 week
 });
 
+app.get('/api/v1/audio/:lang/:query', async (c) => {
+  const { lang, query } = c.req.param();
+  if (!isValidCode(lang, LanguageType.TARGET)) {
+    return c.json({ error: 'Invalid target language' }, 400);
+  }
+
+  try {
+    const audio = await getAudio(lang, query);
+    if (!audio) {
+      return c.json(
+        { error: 'An error occurred while retrieving the audio' },
+        500,
+      );
+    }
+    return c.json({ audio });
+  } catch (error) {
+    return c.json({ error: error?.message || error }, 500);
+  }
+});
+
 app.get('/api/v1/:source/:target/:query', async (c) => {
   const { source = 'auto', target, query } = c.req.param();
 
@@ -64,26 +84,6 @@ app.get('/api/v1/:source/:target/:query', async (c) => {
 
     const info = await infoPromise;
     return c.json({ translation, info });
-  } catch (error) {
-    return c.json({ error: error?.message || error }, 500);
-  }
-});
-
-app.get('/api/v1/audio/:lang/:query', async (c) => {
-  const { lang, query } = c.req.param();
-  if (!isValidCode(lang, LanguageType.TARGET)) {
-    return c.json({ error: 'Invalid target language' }, 400);
-  }
-
-  try {
-    const audio = await getAudio(lang, query);
-    if (!audio) {
-      return c.json(
-        { error: 'An error occurred while retrieving the audio' },
-        500,
-      );
-    }
-    return c.json({ audio });
   } catch (error) {
     return c.json({ error: error?.message || error }, 500);
   }
