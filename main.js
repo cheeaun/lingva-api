@@ -7,7 +7,7 @@ import {
   isValidCode,
   LanguageType,
   languageList,
-} from 'npm:lingva-scraper';
+} from 'https://esm.sh/gh/cheeaun/lingva-scraper@3c866d1b17/src';
 
 const app = new Hono();
 
