@@ -5,13 +5,14 @@ Simple API endpoint based on [Lingva Translate](https://github.com/thedaviddelta
 - Written in [Deno](https://deno.com/).
 - Serverless, on [Deno Deploy](https://deno.com/deploy).
 - There's no front-end.
-- Uses [Lingva Scraper](https://github.com/thedaviddelta/lingva-scraper).
+- Uses [fork](https://github.com/cheeaun/lingva-scraper) of [Lingva Scraper](https://github.com/thedaviddelta/lingva-scraper).
 
 ## Development
 
 Requires [Deno](https://deno.com/).
 
 - `deno task dev` - Run the server with watch mode, for development.
+- `deno task debug` - Run the server with watch mode and debugging, for development.
 - `deno task start` - Run the server.
 
 ## REST API Endpoints
