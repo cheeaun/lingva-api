@@ -1,4 +1,10 @@
 import { Hono } from 'https://deno.land/x/hono/mod.ts';
+import { cors } from 'https://deno.land/x/hono/middleware.ts';
+import {
+  timing,
+  startTime,
+  endTime,
+} from 'https://deno.land/x/hono/middleware.ts';
 
 import {
   getTranslationInfo,
@@ -11,6 +17,16 @@ import {
 
 const app = new Hono();
 
+app.use(
+  '*',
+  cors({
+    allowMethods: ['GET', 'POST'],
+  }),
+  timing({
+    totalDescription: false,
+  }),
+);
+
 app.get('/', (c) => {
   const routes = app.routes.reduce((acc, route) => {
     if (route.path.startsWith('/api')) {
@@ -18,16 +34,11 @@ app.get('/', (c) => {
     }
     return acc;
   }, []);
-  c.header('Access-Control-Allow-Origin', '*');
   return c.json({ routes });
 });
 
 app.use('*', async (c, next) => {
-  const start = Date.now();
   await next();
-  const end = Date.now();
-  c.header('X-Response-Time', `${end - start}`);
-  c.header('Access-Control-Allow-Origin', '*');
   c.header(
     'cache-control',
     c.res.status === 200 ? 'public, max-age=604800' : 'no-cache',
@@ -41,7 +52,9 @@ app.get('/api/v1/audio/:lang/:query', async (c) => {
   }
 
   try {
+    startTime(c, 'audio');
     const audio = await getAudio(lang, query);
+    endTime(c, 'audio');
     if (!audio) {
       return c.json(
         { error: 'An error occurred while retrieving the audio' },
@@ -64,8 +77,16 @@ app.get('/api/v1/:source/:target/:query', async (c) => {
     return c.json({ error: 'Invalid target language' }, 400);
   }
 
-  const translationPromise = getTranslationText(source, target, query);
-  const infoPromise = getTranslationInfo(source, target, query);
+  startTime(c, 'translation');
+  const translationPromise = getTranslationText(source, target, query).finally(
+    () => {
+      endTime(c, 'translation');
+    },
+  );
+  startTime(c, 'info');
+  const infoPromise = getTranslationInfo(source, target, query).finally(() => {
+    endTime(c, 'info');
+  });
 
   try {
     const translation = await translationPromise;
